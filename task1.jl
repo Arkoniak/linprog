@@ -27,24 +27,24 @@ function calculate(purchases, max_day_storage, max_output)
     # definition of the production
     @variable(model, 0 <= x[1:n] <= max_output, Int)
     
-    # definition of the stored inventory
-    @variable(model, 0 <= s[1:n], Int)
-
     # intermidiate auxiliary variables
     cp = cumsum(purchases)
     cx = cumsum(x)
+
+    # Inventory
+    s = cx .- cp
 
     # Constraint 1: no inventory should left on the last day
     @constraint(model, s[n] == 0)
 
     # Constraint 2: inventory is defined as all non consumed production
-    @constraint(model, [i in 1:n], cx[i] - cp[i] == s[i])
+    @constraint(model, s .>= 0)
 
     # Constraint 3: no inventory should be spoiled, which means that inventory should not exceed demand of the next few days
     @constraint(model, [i = 1:n - max_day_storage + 1], cp[i + max_day_storage - 1] - cp[i] >= s[i])
 
     # Objective function
-    @objective(model, Min, sum(s[i] for i in 1:n))
+    @objective(model, Min, sum(s))
 
     optimize!(model)
 

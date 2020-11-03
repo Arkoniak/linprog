@@ -17,7 +17,7 @@ using JuMP
 using GLPK
 
 # Note
-# One can find two versions of calculate function: vector form, where each type of the production represented as a distinct vector and matrix form, where all productions are considered as a matrix of variables
+# Below, you can find two versions of the `calculate` function: vector form, where each type of the production represented as a distinct vector and matrix form, where all productions are considered as a matrix of variables
 
 function calculate(pa::AbstractVector, pb, maxa, maxb, atob)
     @assert length(pa) == length(pb)
@@ -27,21 +27,20 @@ function calculate(pa::AbstractVector, pb, maxa, maxb, atob)
 
     @variable(model, 0 <= xa[1:n] <= maxa, Int)
     @variable(model, 0 <= xb[1:n] <= maxb, Int)
-    @variable(model, 0 <= sa[1:n], Int)
-    @variable(model, 0 <= sb[1:n], Int)
     
     reqa = pa + atob * xb
     cpa = cumsum(reqa)
     cxa = cumsum(xa)
     cpb = cumsum(pb)
     cxb = cumsum(xb)
-    @constraint(model, sa[n] == 0)
-    @constraint(model, sb[n] == 0)
-    
-    @constraint(model, [i in 1:n], cxa[i] - cpa[i] == sa[i])
-    @constraint(model, [i in 1:n], cxb[i] - cpb[i] == sb[i])
+    sa = cxa - cpa
+    sb = cxb - cpb
 
-    @objective(model, Min, sum(sa[i] for i in 1:n) + (atob + 1)*sum(sb[i] for i in 1:n))
+    @constraint(model, sa .>= 0)
+    @constraint(model, sb .>= 0)
+
+    objective = sum(sa) + (atob + 1)*sum(sb)
+    @objective(model, Min, objective)
 
     optimize!(model)
 
@@ -80,16 +79,17 @@ function calculate(p::AbstractMatrix, maxp, atob)
     model = Model(GLPK.Optimizer)
 
     @variable(model, 0 <= x[1:n, j = 1:m] <= maxp[j], Int)
-    @variable(model, 0 <= s[1:n, 1:m], Int)
 
-    req = hcat(p[:, 1] .+ 2 .* x[:, 2], p[:, 2])
+    req = hcat(p[:, 1] .+ atob .* x[:, 2], p[:, 2])
     cx = cumsum(x, dims = 1)
     creq = cumsum(req, dims = 1)
+    s = cx .- creq
 
-    @constraint(model, s[n, :] .== 0)
-    @constraint(model, s .== cx .- creq)
+    @constraint(model, s .>= 0)
 
-    @objective(model, Min, sum(s[i, 1] for i in 1:n) + (atob + 1)*sum(s[i, 2] for i in 1:n))
+    objective = sum(s[:, 1]) + (atob + 1) * sum(s[:, 2])
+
+    @objective(model, Min, objective)
 
     optimize!(model)
 

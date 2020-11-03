@@ -155,7 +155,9 @@ Simplifications:
 
 #### Solution
 
-Solution code [here](task3.py).
+Python solution code [here](task3.py).
+
+Julia solution code [here](task3.jl).
 
 Orders:
 
