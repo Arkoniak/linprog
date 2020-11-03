@@ -70,13 +70,14 @@ Other comments:
 
 #### Solution
 
-Solution code [here](task1.py).
+Python solution code [here](task1.py).
+Julia solution code [here](task1.jl).
 
-| Day                |   0 |   1 |   2 |   3 |   4 |   5 |   6 |
-|:-------------------|----:|----:|----:|----:|----:|----:|----:|
-| Purchases (given)  |     |     |   2 |   8 |   1 |     |   1 |
-| Production (found) |     |     |   5 |   5 |   1 |     |   1 |
-| Inventory          |     |     |   3 |     |     |     |     |
+| Day                | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+|--------------------|--:|--:|--:|--:|--:|--:|--:|
+| Purchases (given)  |   |   | 2 | 8 | 1 |   | 1 |
+| Production (found) |   |   | 5 | 5 | 1 |   | 1 |
+| Inventory          |   |   | 3 |   |   |   |   |
 
 
 ![](images/task1.png)
@@ -208,6 +209,7 @@ Software:
 
 - [PuLP package documentation](https://coin-or.github.io/pulp)
 - [Pyomo](https://www.pyomo.org)
+- [JuMP](https://github.com/jump-dev/JuMP.jl)
 
 Papers (review, etc):
 
