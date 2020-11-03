@@ -3,7 +3,7 @@
 > The optimal solution for a model is not necessarily the optimal solution for the real problem.
 `["Supplement B"]`
 
-This is a set of demo problems to try [PuLP](https://coin-or.github.io/pulp), python librabry for linear programming. There are three isolated tasks and a combination of them into bigger, more realistic production problem.
+This is a set of demo problems to try [PuLP](https://coin-or.github.io/pulp), python library for linear programming and [JuMP](https://github.com/jump-dev/JuMP.jl), Julia library for linear programming. There are three isolated tasks and a combination of them into bigger, more realistic production problem.
 
 - [Task 1 - Production schedule for one perishable product](#task1)
 - [Task 2 - Sequential production](#task2)
@@ -71,6 +71,7 @@ Other comments:
 #### Solution
 
 Python solution code [here](task1.py).
+
 Julia solution code [here](task1.jl).
 
 | Day                | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
@@ -96,7 +97,9 @@ Julia solution code [here](task1.jl).
 
 Introduce target function and find optimal production of product A and B (`xa`, `xb`)
 
-Solution code [here](task2.py).
+Python solution code [here](task2.py).
+
+Julia solution code [here](task2.jl).
 
 |               |   0 |   1 |   2 |   3 |   4 |   5 |   6 |
 |:--------------|----:|----:|----:|----:|----:|----:|----:|
@@ -113,13 +116,17 @@ Solution code [here](task2.py).
 
 Extra notation: `processing_a + sales_a = requirement_a`
 
-Things learned:
+Things learned in python:
 
 - we may omit closed sum constraint if min inventory 
 - we need scale the inventory in sequential production min target function 
 - we can keep only decision variables as `lpVariable`
 - we can use dicts or numpy arrays
 
+Things learned in Julia:
+
+- we can use very compact matrix notation to declare variables and constraints
+- we can use broadcasting in constants declaration
 
 <a name="task3"></a>
 
